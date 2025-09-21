@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Typing Invaders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-size-ui: 1.25rem;
+            --font-size-word: 1.1rem;
+            --input-font-size: 1.5rem;
+            --spaceship-size: 80px;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Press-Start-2P', cursive;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            background: #000 url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Cg fill-rule="evenodd"%3E%3Cg fill="%231a1a1a" fill-opacity="0.4"%3E%3Cpath opacity=".5" d="M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h16v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-1v9h1zm-10 0v-9h-1v9h1zm-10 0v-9h-1v9h1zm-10 0v-9h-1v9h1zm-10 0v-9h-1v9h1zm-10 0v-9h-1v9h1zm-10 0v-9h-1v9h1zm-10 0v-9h-1v9h1zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9z"/%3E%3Cpath d="M6 5V0h1v5h4v1H6v4H5V6H0V5h5z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+            position: relative;
+        }
+
+        .word {
+            position: absolute;
+            font-size: var(--font-size-word);
+            color: #00ff00;
+            background-color: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-shadow: 0 0 5px #00ff00;
+            white-space: nowrap;
+            will-change: transform;
+        }
+        
+        .word.destroy {
+            transition: all 0.3s ease-in;
+            transform: scale(1.5);
+            opacity: 0;
+            color: #ff0000;
+        }
+
+        .laser {
+            position: absolute;
+            width: 8px;
+            background: linear-gradient(to top, #ff4545, #ffff88, #ffffff);
+            border-radius: 4px;
+            box-shadow: 0 0 20px 5px rgba(255, 100, 100, 0.7);
+            transform-origin: bottom center;
+            z-index: 5;
+            will-change: transform, height;
+        }
+        
+        #spaceship {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: var(--spaceship-size);
+            height: var(--spaceship-size);
+            filter: drop-shadow(0 0 10px #00ffff);
+            transition: transform 0.2s ease-out;
+        }
+        
+        #spaceship.hit { animation: ship-hit 0.5s ease-in-out; }
+
+        @keyframes ship-hit {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); filter: drop-shadow(0 0 15px #ff0000); }
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle linear infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        #current-input-container {
+            position: absolute;
+            bottom: calc(var(--spaceship-size) + 30px);
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            font-size: var(--input-font-size);
+            color: #fff;
+            letter-spacing: 4px;
+            min-width: 300px;
+            min-height: 58px;
+            text-align: center;
+        }
+
+        #modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 100;
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .ui-element {
+            font-size: var(--font-size-ui);
+            position: absolute;
+            top: 1rem;
+        }
+
+        #hidden-input {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            :root {
+                --font-size-ui: 0.8rem;
+                --font-size-word: 0.9rem;
+                --input-font-size: 1.2rem;
+                --spaceship-size: 60px;
+            }
+            #current-input-container {
+                min-width: 250px;
+                padding: 8px 15px;
+            }
+            .modal-content h1 { font-size: 1.8rem; }
+        }
+        
+        @media (max-width: 480px) {
+             :root {
+                --font-size-ui: 0.7rem;
+                --font-size-word: 0.8rem;
+                --input-font-size: 1rem;
+             }
+        }
+    </style>
+</head>
+<body class="bg-black text-white select-none">
+
+    <div id="game-container" class="relative w-full h-full">
+        <!-- Stars will be generated here -->
+    </div>
+    
+    <div class="ui-element left-4">Puntuación: <span id="score">0</span></div>
+    <div class="ui-element right-4">Nivel: <span id="level">1</span></div>
+    <div class="ui-element right-4 top-10">Vidas: <span id="lives">3</span></div>
+
+    <div id="game-screen" class="absolute inset-0"></div>
+
+    <svg id="spaceship" viewBox="0 0 24 24" fill="#00ffff" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2.5 21.5h19L12 2zm0 4.34L17.25 19H6.75L12 6.34z"/>
+    </svg>
+    
+    <div id="current-input-container">
+        <span id="current-input"></span><span class="animate-ping">_</span>
+    </div>
+
+    <input type="text" id="hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+    <div id="modal">
+        <div class="modal-content bg-gray-900/80 p-10 rounded-lg border-2 border-cyan-400 shadow-lg shadow-cyan-400/50">
+            <h1 id="modal-title" class="text-4xl mb-4 text-cyan-300">TYPING INVADERS</h1>
+            <p id="modal-text" class="text-lg mb-4">Destruye las palabras invasoras escribiéndolas.</p>
+            <p id="modal-score" class="text-2xl text-yellow-300 hidden"></p>
+            <button id="start-button" class="bg-green-500 text-black p-4 rounded hover:bg-white hover:shadow-lg hover:shadow-white/50 transition-all">Iniciar Juego</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <script>
+        const gameContainer = document.getElementById('game-container');
+        const gameScreen = document.getElementById('game-screen');
+        const scoreEl = document.getElementById('score');
+        const levelEl = document.getElementById('level');
+        const livesEl = document.getElementById('lives');
+        const spaceship = document.getElementById('spaceship');
+        const currentInputEl = document.getElementById('current-input');
+        const hiddenInput = document.getElementById('hidden-input');
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalText = document.getElementById('modal-text');
+        const modalScore = document.getElementById('modal-score');
+        const startButton = document.getElementById('start-button');
+        
+        let score = 0, level = 1, lives = 3, isPlaying = false;
+        let wordsOnScreen = [], gameInterval;
+        let wordsAvailable = [];
+
+        const config = {
+            wordsPerLevel: 10,
+            baseSpeed: 12,
+            speedIncrease: 0.6,
+            baseSpawnRate: 2200,
+            spawnRateDecrease: 120,
+        };
+
+        const MASTER_WORD_LIST = ["casa", "sol", "luz", "mar", "rey", "rio", "flor", "pan", "ver", "ir", "ser", "hoy", "azul", "rojo", "verde", "agua", "fuego", "aire", "tierra", "mano", "pie", "ojo", "boca", "pelo", "cara", "jugar", "correr", "saltar", "dormir", "comer", "beber", "leer", "escribir", "hablar", "pensar", "sentir", "amar", "vivir", "morir", "nacer", "crecer", "aprender", "trabajar", "viajar", "soñar", "reir", "llorar", "cantar", "bailar", "pintar", "cocinar", "limpiar", "ordenar", "comprar", "vender", "pagar", "abrir", "cerrar", "subir", "bajar", "entrar", "salir", "venir", "llegar", "partir", "quedar", "mover", "parar", "seguir", "cambiar", "empezar", "terminar", "ayudar", "preguntar", "responder", "explicar", "entender", "saber", "conocer", "creer", "dudar", "esperar", "desear", "necesitar", "poder", "querer", "deber", "tener", "hacer", "decir", "ver", "oir", "oler", "tocar", "gustar", "elegir", "decidir", "recordar", "olvidar", "imaginar", "crear", "destruir", "construir", "proteger", "atacar", "defender", "luchar", "ganar", "perder", "competir", "colaborar", "compartir", "unir", "separar", "buscar", "encontrar", "guardar", "tirar", "recoger", "dejar", "tomar", "dar", "recibir", "prestar", "devolver", "enviar", "traer", "llevar", "poner", "quitar", "usar", "probar", "medir", "pesar", "contar", "sumar", "restar", "estudiar", "enseñar", "aprobar", "graduar", "celebrar", "festejar", "invitar", "asistir", "participar", "organizar", "planear", "preparar", "realizar", "conseguir", "lograr", "alcanzar", "superar", "fracasar", "intentar", "esforzar", "rendirse", "continuar", "avanzar", "mejorar", "cambiar", "adaptarse", "evolucionar", "sobrevivir", "disfrutar", "sufrir", "aburrirse", "divertirse", "relajarse", "calmarse", "enfadarse", "alegrarse", "sorprender", "asustarse", "preocupar", "confiar", "respetar", "admirar", "criticar", "juzgar", "perdonar", "agradecer", "felicitar", "saludar", "despedir", "presentar", "describir", "comparar", "opinar", "argumentar", "convencer", "negociar", "acordar", "discutir", "familia", "trabajo", "estudio", "salud", "dinero", "felicidad", "tristeza", "miedo", "sorpresa", "alegria", "naturaleza", "animales", "plantas", "clima", "tiempo", "historia", "ciencia", "arte", "musica", "literatura", "cine", "teatro", "deporte", "tecnologia", "internet", "futuro", "pasado", "presente", "galaxia", "planeta", "estrella", "cometa", "orbita", "universo", "cohete", "mision", "logica", "velocidad", "precision", "desafio", "meteorito", "nebula", "cuantica"];
+        
+        const synth = new Tone.Synth().toDestination();
+        const laserSound = () => synth.triggerAttackRelease("C5", "8n", Tone.now());
+        const explosionSound = () => new Tone.NoiseSynth({ noise: { type: "white" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0 } }).toDestination().triggerAttackRelease("8n");
+        const gameOverSound = () => { synth.triggerAttackRelease("C3", "4n", Tone.now()); synth.triggerAttackRelease("E2", "2n", Tone.now() + 0.3); };
+        const levelUpSound = () => { synth.triggerAttackRelease("C4", "8n", Tone.now()); synth.triggerAttackRelease("G4", "8n", Tone.now() + 0.2); synth.triggerAttackRelease("C5", "8n", Tone.now() + 0.4); };
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startGame() {
+            isPlaying = true;
+            modal.style.display = 'none';
+            score = 0;
+            level = 1;
+            lives = 3;
+            wordsAvailable = [...MASTER_WORD_LIST];
+            shuffleArray(wordsAvailable);
+            
+            hiddenInput.value = "";
+            updateCurrentInputDisplay();
+            updateUI();
+            
+            wordsOnScreen.forEach(word => word.element.remove());
+            wordsOnScreen = [];
+            
+            gameInterval = setInterval(spawnWord, config.baseSpawnRate);
+            requestAnimationFrame(gameLoop);
+            hiddenInput.focus();
+        }
+        
+        function gameOver() {
+            isPlaying = false;
+            clearInterval(gameInterval);
+            gameOverSound();
+            
+            modalTitle.textContent = "Juego Terminado";
+            modalText.textContent = "¡Inténtalo de nuevo para superar tu récord!";
+            modalScore.textContent = `Puntuación Final: ${score}`;
+            modalScore.classList.remove('hidden');
+            startButton.textContent = "Reiniciar";
+            modal.style.display = 'flex';
+        }
+
+        function gameLoop() {
+            if (!isPlaying) return;
+            const screenHeight = gameScreen.offsetHeight;
+            for (let i = wordsOnScreen.length - 1; i >= 0; i--) {
+                const word = wordsOnScreen[i];
+                // Check if the word is off-screen
+                if (word.element.getBoundingClientRect().top > screenHeight) {
+                    word.element.remove();
+                    wordsOnScreen.splice(i, 1);
+                    // This is where a life is lost for a missed word
+                    loseLife();
+                }
+            }
+            requestAnimationFrame(gameLoop);
+        }
+
+        function loseLife() {
+            if (!isPlaying) return;
+            lives--;
+            spaceship.classList.add('hit');
+            setTimeout(() => spaceship.classList.remove('hit'), 500);
+            explosionSound();
+
+            // --- CAMBIO CLAVE ---
+            // Limpia el teclado (el campo de texto) cuando se falla una palabra.
+            // Esto cumple con la solicitud de limpiar el teclado si no se completa la palabra a tiempo.
+            hiddenInput.value = "";
+            updateCurrentInputDisplay();
+            updateWordHighlights(); // También quita cualquier resaltado parcial de otras palabras.
+
+            updateUI();
+            if (lives <= 0) gameOver();
+        }
+        
+        function spawnWord() {
+            if (wordsAvailable.length === 0) {
+                wordsAvailable = [...MASTER_WORD_LIST];
+                shuffleArray(wordsAvailable);
+            }
+            const text = wordsAvailable.pop();
+            const wordElement = document.createElement('div');
+            wordElement.className = 'word';
+            wordElement.textContent = text;
+            
+            const screenWidth = gameScreen.offsetWidth;
+            wordElement.style.left = `${Math.random() * (screenWidth - (text.length * 15))}px`;
+            wordElement.style.top = '-50px';
+            
+            const speed = config.baseSpeed - (level * config.speedIncrease);
+            wordElement.style.transition = `transform ${Math.max(speed, 2)}s linear`;
+            
+            gameScreen.appendChild(wordElement);
+
+            requestAnimationFrame(() => {
+                 wordElement.style.transform = `translateY(${gameScreen.offsetHeight + 50}px)`;
+            });
+            
+            wordsOnScreen.push({ text: text, element: wordElement });
+        }
+
+        function handleInput(e) {
+            if (!isPlaying) return;
+            
+            const currentText = e.target.value.toLowerCase();
+            updateCurrentInputDisplay(currentText);
+
+            let wordDestroyed = false;
+            for (let i = wordsOnScreen.length - 1; i >= 0; i--) {
+                if (wordsOnScreen[i].text === currentText) {
+                    destroyWord(wordsOnScreen[i]);
+                    wordsOnScreen.splice(i, 1);
+                    wordDestroyed = true;
+                    break;
+                }
+            }
+
+            if (wordDestroyed) {
+                hiddenInput.value = "";
+                updateCurrentInputDisplay();
+            }
+            updateWordHighlights();
+        }
+
+        function updateWordHighlights() {
+            const currentText = hiddenInput.value.toLowerCase();
+            wordsOnScreen.forEach(wordObj => {
+                if (currentText.length > 0 && wordObj.text.startsWith(currentText)) {
+                    wordObj.element.innerHTML = `<span class="text-yellow-300">${currentText}</span>` + wordObj.text.substring(currentText.length);
+                } else {
+                    wordObj.element.innerHTML = wordObj.text;
+                }
+            });
+        }
+        
+        function destroyWord(wordObj) {
+            score += wordObj.text.length;
+            laserSound();
+            fireLaser(wordObj.element);
+            
+            wordObj.element.classList.add('destroy');
+            explosionSound();
+
+            setTimeout(() => wordObj.element.remove(), 300);
+            
+            if (Math.floor(score / 100) >= level) levelUp();
+            
+            updateUI();
+        }
+
+        function levelUp() {
+            level++;
+            levelUpSound();
+            clearInterval(gameInterval);
+            const newSpawnRate = config.baseSpawnRate - (level * config.spawnRateDecrease);
+            gameInterval = setInterval(spawnWord, Math.max(newSpawnRate, 500));
+        }
+
+        function fireLaser(targetElement) {
+            const laser = document.createElement('div');
+            laser.className = 'laser';
+            const spaceshipRect = spaceship.getBoundingClientRect();
+            const targetRect = targetElement.getBoundingClientRect();
+            
+            const startX = spaceshipRect.left + spaceshipRect.width / 2;
+            const startY = spaceshipRect.top;
+            const endX = targetRect.left + targetRect.width / 2;
+            const endY = targetRect.top + targetRect.height / 2;
+
+            const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI + 90;
+            const distance = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+
+            laser.style.left = `${startX}px`;
+            laser.style.top = `${startY}px`;
+            laser.style.height = `${distance}px`;
+            laser.style.transform = `rotate(${angle}deg)`;
+            
+            gameContainer.appendChild(laser);
+            setTimeout(() => laser.remove(), 100);
+        }
+
+        function updateUI() {
+            scoreEl.textContent = score;
+            levelEl.textContent = level;
+            livesEl.textContent = '❤️'.repeat(lives);
+        }
+        
+        function updateCurrentInputDisplay(text = "") {
+            currentInputEl.textContent = text;
+        }
+
+        function createStars() {
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                gameContainer.appendChild(star);
+            }
+        }
+        
+        startButton.addEventListener('click', () => {
+            Tone.start().then(startGame);
+        });
+
+        hiddenInput.addEventListener('input', handleInput);
+        hiddenInput.addEventListener('blur', () => {
+            if(isPlaying) hiddenInput.focus();
+        });
+        gameContainer.addEventListener('click', () => hiddenInput.focus());
+        
+        window.onload = () => {
+            createStars();
+            updateUI();
+        };
+    </script>
+</body>
+</html>
